@@ -19,4 +19,4 @@ def pad_sequences(seqs, pad_value=0, max_len=None):
             final_batch.append(p_seq)
         else:
             final_batch.append(seq[:max_len])
-    return np.array(final_batch)
+    return np.asarray(final_batch)
