@@ -5,4 +5,4 @@ def matrix_transpose(A):
     Return the transpose of matrix A (swap rows and columns).
     """
     # Write code here
-    return np.array(A).T
+    return np.asarray(A).T
