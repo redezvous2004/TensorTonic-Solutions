@@ -20,14 +20,20 @@ def gru_cell_forward(x, h_prev, params):
     x_copy, h_prev_copy = x.copy(), h_prev.copy()
     x_2d, _ =  _as2d(x_copy, len(x_copy))
     h_prev_2d, is_conversion = _as2d(h_prev_copy, len(h_prev_copy))
-    z_t = _sigmoid(x_2d.dot(params["Wz"]) + h_prev_2d.dot(params["Uz"]) + params["bz"])
-    r_t = _sigmoid(x_2d.dot(params["Wr"]) + h_prev_2d.dot(params["Ur"]) + params["br"])
+
+    H = h_prev_2d.shape[1]
+
+    W_gate = np.concatenate([params["Wz"], params["Wr"]], axis=1)
+    U_gate = np.concatenate([params["Uz"], params["Ur"]], axis=1)
+    b_gate = np.concatenate([params["bz"], params["br"]])
+
+    gate = x_2d @ W_gate + h_prev_2d @ U_gate + b_gate
+    
+    z_t = _sigmoid(gate[:, :H])
+    r_t = _sigmoid(gate[:, H:])
     cand_hidden_state = np.tanh(x_2d.dot(params["Wh"]) + (r_t * h_prev_2d).dot(params["Uh"]) + params["bh"])
     h_t = (1 - z_t) * h_prev_2d + z_t * cand_hidden_state
-    if is_conversion == True:
-        return h_t.reshape(-1)
-    else:
-        return h_t
+    return h_t.reshape(-1) if is_conversion else h_t
     
 
     
