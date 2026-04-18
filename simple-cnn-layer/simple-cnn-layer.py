@@ -30,5 +30,3 @@ def conv2d(x, W, b):
                     y[n, c, i, j] = np.sum(patch * filter_w) + b[c]
     return y
     
-    return y
-    
