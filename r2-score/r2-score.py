@@ -12,7 +12,7 @@ def r2_score(y_true, y_pred) -> float:
     y_mean = np.mean(y_true)
     unique_vals = np.unique(y_true)
     if len(unique_vals) == 1:   
-        if np.array_equal(y_true, y_pred):
+        if False not in (y_true == y_pred):
             return 1.0
         return 0.0
     ss_res = np.sum((y_true - y_pred) ** 2)
