@@ -8,7 +8,7 @@ def matrix_normalization(matrix, axis=None, norm_type='l2'):
     matrix = np.asarray(matrix, dtype=float)
     if matrix.ndim != 2 or norm_type not in ['l1', 'l2', 'max']:
         return None
-    if (axis is not None) and (axis >= matrix.ndim):
+    if axis is not None and axis >= matrix.ndim:
         return None
     if norm_type == 'l2':
         norm_vals = np.linalg.norm(matrix, axis=axis, keepdims=True)
