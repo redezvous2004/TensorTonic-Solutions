@@ -10,7 +10,7 @@ def pearson_correlation(X):
         return None
     mean = np.mean(X, axis=0)
     X_centered = X - mean
-    std =np.std(X_centered, axis=0, ddof=1)
+    std =np.std(X_centered, axis=0, ddof=1)[:, np.newaxis]
     covariance_mtx = (1 / (len(X) - 1)) * (X_centered.T @ X_centered)
-    return covariance_mtx / np.outer(std, std)
+    return np.divide(covariance_mtx, std @ std.T)
     
