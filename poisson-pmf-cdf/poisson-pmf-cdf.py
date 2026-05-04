@@ -1,5 +1,4 @@
 import numpy as np
-from scipy.special import gammaln
 def poisson_pmf_cdf(lam, k):
     """
     Compute Poisson PMF and CDF.
@@ -10,10 +9,13 @@ def poisson_pmf_cdf(lam, k):
         cdf = 1.0
         return float(pmf), float(cdf)
 
-    log_pmf = -lam + k * np.log(lam) - gammaln(k + 1)
+    log_factorial = np.sum(np.log(np.arange(1, k + 1)))
+    log_pmf = -lam + k * np.log(lam) - log_factorial
     pmf = np.exp(log_pmf)
 
-    idx = np.arange(k + 1)
-    log_pmf_array = -lam + idx * np.log(lam) - gammaln(idx + 1)
+    log_pmf_array = []
+    for i in range(k + 1):
+        log_factorial_i = np.sum(np.log(np.arange(1, i + 1)))
+        log_pmf_array.append(-lam + i * np.log(lam) - log_factorial_i)
     cdf = np.sum(np.exp(log_pmf_array))
     return float(pmf), float(cdf)
