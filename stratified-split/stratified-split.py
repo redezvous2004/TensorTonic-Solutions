@@ -5,7 +5,6 @@ def stratified_split(X, y, test_size=0.2, rng=None):
     Split features X and labels y into train/test while preserving class proportions.
     """
     # Write code here
-    np.random.seed(42)
     X, y = map(lambda a: np.asarray(a), [X, y])
     if rng is None:
         rng_to_use = np.random
