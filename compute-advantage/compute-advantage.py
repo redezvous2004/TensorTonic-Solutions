@@ -8,8 +8,8 @@ def compute_advantage(states, rewards, V, gamma):
     states, rewards, V = map(lambda x: np.asarray(x), [states, rewards, V])
     A = np.zeros(states.shape)
     g = 0.0
-    for state in states[::-1]:
-        g = rewards[state] + gamma * g
-        A[state] = g - V[state]
+    for t in range(len(states) - 1, -1, -1):
+        g = rewards[t] + gamma * g
+        A[t] = g - V[states[t]]
     return A
     
