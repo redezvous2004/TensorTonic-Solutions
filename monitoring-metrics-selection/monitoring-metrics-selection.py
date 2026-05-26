@@ -9,11 +9,11 @@ def compute_monitoring_metrics(system_type, y_true, y_pred):
     if system_type == "classification":
         tp, tn, fn = 0, 0, 0
         for tr, pred in zip(y_true, y_pred):
-            if tr == pred and pred == 1:
+            if tr == 1 and pred == 1:
                 tp += 1
-            elif tr == pred and pred == 0:
+            elif tr == 0 and pred == 0:
                 tn += 1
-            elif tr != pred and tr == 1 and pred == 0:
+            elif tr == 1 and pred == 0:
                 fn += 1
         fp = n - tp - tn - fn
         accuracy = (tp + tn) / n if n != 0 else 0.0
