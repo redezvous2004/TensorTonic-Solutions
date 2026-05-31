@@ -30,10 +30,10 @@ def calibrate_isotonic(cal_labels, cal_probs, new_probs):
 
     for prob in new_probs:
         if prob <= cal_probs[0]:
-            results.append(round(cal_labels[0], 4))
+            results.append(cal_labels[0])
             continue
         if prob >= cal_probs[-1]:
-            results.append(round(cal_labels[-1], 4))
+            results.append(cal_labels[-1])
             continue
             
         for i in range(1, len(cal_probs)):
