@@ -9,43 +9,23 @@ def lbfgs_direction(grad, s_list, y_list):
     m = len(s_list)
     if m == 0:
         return [-g for g in grad]
-    
-    alpha = [0.0] * m
-    rho = [0.0] * m
-    
-    q = list(grad)
-    
+    alpha, rho = [0.0] * m, [0.0] * m
     for i in reversed(range(m)):
         s_i = s_list[i]
         y_i = y_list[i]
-        
         ys_dot = _dot(y_i, s_i)
-        if ys_dot == 0:
-            rho[i] = 0.0
-        else:
-            rho[i] = 1.0 / ys_dot
-            
-        alpha[i] = rho[i] * _dot(s_i, q)
+        rho[i] = 1 / ys_dot if ys_dot != 0 else 0.0
+        alpha[i] = rho[i] * _dot(s_i, grad)
+        new_grad = [g - alpha[i] * y_ij for g, y_ij in zip(grad, y_i)]
 
-        q = [q_j - alpha[i] * y_ij for q_j, y_ij in zip(q, y_i)]
-        
-    s_last = s_list[-1]
-    y_last = y_list[-1]
-    yy_dot = _dot(y_last, y_last)
-    
-    gamma = _dot(s_last, y_last) / yy_dot if yy_dot != 0 else 1.0
-    
-    r = [gamma * q_j for q_j in q]
-    
+    yy_dot = _dot(y_list[-1], y_list[-1])
+    gamma = _dot(s_list[-1], y_list[-1]) / yy_dot if yy_dot != 0 else 1.0
+    r = [gamma * g for g in new_grad]
     for i in range(m):
         s_i = s_list[i]
         y_i = y_list[i]
-        
         beta = rho[i] * _dot(y_i, r)
-        
-        coeff = alpha[i] - beta
-        r = [r_j + coeff * s_ij for r_j, s_ij in zip(r, s_i)]
-        
-    direction = [-r_j for r_j in r]
+        r = [r_j + s_ij * (alpha[i] - beta) for r_j, s_ij in zip(r, s_i)]
+    return [-new_r for new_r in r]
     
-    return direction
+    
