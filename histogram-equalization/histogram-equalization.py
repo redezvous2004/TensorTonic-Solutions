@@ -11,14 +11,12 @@ def histogram_equalize(image):
         for pixel in pixels:
             freqs[pixel] = freqs.get(pixel, 0) + 1
     sorted_freqs = dict(sorted(freqs.items(), key=lambda item: item[0]))
-    key_arr = sorted_freqs.keys()
-    val_arr = sorted_freqs.values()
     sum = 0
     cdf = []
-    for val in val_arr:
+    for val in sorted_freqs.values():
         sum += val
         cdf.append(sum)
-    cdf_dict = {k: v for k, v in zip(key_arr, cdf)}
+    cdf_dict = {k: v for k, v in zip(sorted_freqs.keys(), cdf)}
     cdf_min = min(cdf_val for cdf_val in cdf_dict.values())
     for i in range(n):
         for j in range(m):
