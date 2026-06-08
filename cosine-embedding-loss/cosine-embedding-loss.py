@@ -12,8 +12,9 @@ def cosine_embedding_loss(x1, x2, label, margin):
         x1_cul += x1[i] ** 2
         x2_cul += x2[i] ** 2
     x1_mag, x2_mag = math.sqrt(x1_cul), math.sqrt(x2_cul)
-    cosin = dot_product / (x1_mag * x2_mag)
+    cosin = dot_product / (x1_mag * x2_mag) if x1_mag * x2_mag != 0 else 0.0
+    clipped_cosin = min(max(-1, cosin), 1)
     if label == 1:
-        return 1 - cosin
+        return 1 - clipped_cosin
     else:
-        return max(0, cosin - margin)
+        return max(0, clipped_cosin - margin)
