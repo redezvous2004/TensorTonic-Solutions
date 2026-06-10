@@ -4,12 +4,11 @@ def policy_gradient_loss(log_probs, rewards, gamma):
     """
     # Write code here
     discounted_return = []
+    R = 0
     T = len(rewards)
-    for i in range(T - 1, -1, -1):
-        if i == T - 1:
-            discounted_return.append(rewards[i])
-        else:
-            discounted_return.append(rewards[i] + gamma * discounted_return[-1])
+    for reward in reversed(rewards):
+        R = reward + gamma * R
+        discounted_return.append(R)
     discounted_return = list(reversed(discounted_return))
     mean_return = sum(discounted_return) / T
     advantages = [value - mean_return for value in discounted_return]
