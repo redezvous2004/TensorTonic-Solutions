@@ -6,13 +6,12 @@ def random_forest_vote(predictions):
     """
     # Write code here
     predictions = np.asarray(predictions)
-    results = []
-    for i in range(predictions.shape[-1]):
-        sample_votes = predictions[:, i]
+    def vote_for_single_sample(sample_votes):
         values, counts = np.unique(sample_votes, return_counts=True)
         most_vote_idx = np.argmax(counts)
-        results.append(values[most_vote_idx])
-    return results
+        return values[most_vote_idx]
+    results = np.apply_along_axis(vote_for_single_sample, axis=0, arr=predictions)
+    return results.tolist()
         
         
         
