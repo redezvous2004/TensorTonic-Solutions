@@ -3,7 +3,9 @@ def linear_interpolation(values):
     Fill missing (None) values using linear interpolation.
     """
     # Write code here
-    results = [values[0]]
+    if not values:
+        return []
+    results = list(values)
     left, right = -1e9, 1e9
     i = 1
     while i < len(values):
@@ -15,9 +17,7 @@ def linear_interpolation(values):
         else:
             if left != -1e9:
                 for j in range(left + 1, i):
-                    val = values[left] + (j - left) / (i - left) * (values[i] - values[left])
-                    results.append(val)
-            results.append(values[i])
+                    results[j] = values[left] + (j - left) / (i - left) * (values[i] - values[left])
         i += 1
     return results
             
