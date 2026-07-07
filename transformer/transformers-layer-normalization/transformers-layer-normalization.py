@@ -1,5 +1,5 @@
 import numpy as np
-import math
+
 def layer_norm(x: np.ndarray, gamma: np.ndarray, beta: np.ndarray, eps: float = 1e-6) -> np.ndarray:
     """
     Returns: Normalized array of same shape as x
