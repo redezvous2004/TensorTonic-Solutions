@@ -9,6 +9,7 @@ class BatchNorm:
         self.running_mean = np.zeros(num_features)
         self.running_var = np.ones(num_features)
     def forward(self, x, training=True):
+        assert x.shape[1] == self.num_features
         if training:
             mean = np.mean(x, axis=0)
             var = np.var(x, axis=0)
