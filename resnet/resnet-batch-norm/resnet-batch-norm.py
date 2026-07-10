@@ -46,7 +46,7 @@ def batch_norm_block(x, W1, W2, gamma1, beta1, gamma2, beta2, mode):
     """
     # YOUR CODE HERE
     x, W1, W2, gamma1, beta1, gamma2, beta2 = map(lambda a: np.asarray(a), [x, W1, W2, gamma1, beta1, gamma2, beta2])
-    batch, num_features = x.shape
+    _, num_features = x.shape
     bn1 = BatchNorm(num_features, gamma1, beta1)
     bn2 = BatchNorm(num_features, gamma2, beta2)
     if mode == "pre":
