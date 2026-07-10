@@ -14,16 +14,6 @@ class BasicBlock:
         else:
             shortcut = x
         return relu(out + shortcut)
-# class ResNet18:
-#     def __init__(self, num_classes, W1_b1, W2_b1, W1_b2, W2_b2, Ws_b2):
-#         self.num_classes = num_classes
-#         self.stage1 = W1_b1
-#         self.stage2 = W1_b2
-#         self.W2_b1 = W2_b1
-#         self.W2_b2 = W2_b2
-#         self.Ws_b2 = Ws_b2
-#     def forward(self):
-#         pass
 def resnet_forward(x, conv1, W1_b1, W2_b1, W1_b2, W2_b2, Ws_b2, fc):
     """
     Returns: np.ndarray of shape (batch, num_classes) with classification logits
