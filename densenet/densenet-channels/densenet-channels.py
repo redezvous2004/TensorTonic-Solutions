@@ -12,6 +12,6 @@ def densenet_channel_counts(stem_channels: int, growth_rate: int, block_layers, 
         C_block = C + n_layer * growth_rate
         result.append(C_block)
         if idx != len(block_layers) - 1:
-            C_trans = int(C_block * compression)
+            C_trans = math.floor(C_block * compression)
             result.append(C_trans)
     return torch.tensor(result, dtype=torch.int64)
