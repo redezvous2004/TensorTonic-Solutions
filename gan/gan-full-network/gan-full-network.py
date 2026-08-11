@@ -32,7 +32,6 @@ class GAN:
         Returns dict with "d_loss" and "g_loss", rounded to 4 decimals.
         """
         # Your implementation here
-        # real_data, z = map(lambda x: np.asarray(x), [real_data, z])
         generated_data = self.generate(z)
         p_fake = self.discriminate(generated_data)
         p_real = self.discriminate(real_data)
