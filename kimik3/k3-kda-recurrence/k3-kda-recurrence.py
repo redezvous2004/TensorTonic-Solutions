@@ -7,23 +7,26 @@ def kda_recurrence(query: torch.Tensor, key: torch.Tensor, value: torch.Tensor, 
     batch, seq, head, d_k = query.shape
     state = initial_state.clone()
     outputs = []
-
     for i in range(seq):
-        query_t = query[:, i, ...]
-        key_t = key[:, i, ...]
-        value_t = value[:, i, ...]
-        beta_t = write_strength[:, i, ...]
+        q_t = query[:, i, ...]
+        k_t = key[:, i, ...]
+        v_t = value[:, i, ...]
         alpha_t = torch.exp(g_min * torch.sigmoid(decay_logits[:, i, ...]))
+        beta_t = write_strength[:, i, ...]
 
-        decayed = alpha_t.unsqueeze(-1) * state
+        decay = alpha_t.unsqueeze(-1) * state
+        erase = beta_t.unsqueeze(-1) * (k_t.unsqueeze(-1) @ (k_t.unsqueeze(-1).mT @ decay))
+        write = beta_t.unsqueeze(-1) * (k_t.unsqueeze(-1) @ v_t.unsqueeze(-2))
+        state = decay - erase + write # b, h, d_k, d_v
 
-        erase = beta_t.unsqueeze(-1) * key_t.unsqueeze(-1) * (key_t.unsqueeze(-1) * decayed).sum(dim=-2).unsqueeze(-2)
-        write = beta_t.unsqueeze(-1) * key_t.unsqueeze(-1) * value_t.unsqueeze(-2)
-        state = decayed - erase + write
+        read = (q_t.unsqueeze(-2) @ state).squeeze(-2) # b, h, d_v
+        norm = read / torch.sqrt(read.square().mean(dim=-1, keepdims=True) + eps)
+        gated = torch.sigmoid(output_gate_logits[:, i, ...]) * norm
+        merged = gated.reshape(batch, -1) # b, h * d_v
+        outputs.append(merged @ output_projection.T)
+    final = torch.stack(outputs, dim=1)
+    return {"outputs": final, "final_state": state}
         
-        read = (query_t.unsqueeze(-1) * state).sum(dim=-2)
-        normalized = read / torch.sqrt(read.square().mean(dim=-1, keepdim=True) + eps)
-        gated = torch.sigmoid(output_gate_logits[:, i]) * normalized
-        merged = gated.reshape(gated.shape[0], -1)
-        outputs.append(merged @ output_projection.transpose(0, 1))
-    return {"outputs": torch.stack(outputs, dim=1), "final_state": state}
+        
+
+        
